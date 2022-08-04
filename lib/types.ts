@@ -36,14 +36,14 @@ export interface SizeFieldOptions {
   size: number;
 }
 
-export type ObjectIdFieldOptions<T extends Document> = PopulateWithFactory<T> | PopulateWithSchema<T>
+export type ObjectIdFieldOptions<K, T extends HydratedDocument<K> = HydratedDocument<K>> = PopulateWithFactory<K> | PopulateWithSchema<K>
 
 export interface PopulateWithFactory<K, T extends HydratedDocument<K> = HydratedDocument<K>> {
   populateWithFactory: Mocker<K, T>
 }
 
-export interface PopulateWithSchema<T extends Document> {
-  populateWithSchema: Model<T> | Schema
+export interface PopulateWithSchema<K, T extends HydratedDocument<K> = HydratedDocument<K>> {
+  populateWithSchema: Model<K> | Schema
 }
 
 export function isStringFieldOptions(o: MockerFieldOption): o is StringFieldOptions {
@@ -51,11 +51,11 @@ export function isStringFieldOptions(o: MockerFieldOption): o is StringFieldOpti
 }
 
 
-export function isPopulateWithFactory<T extends Document>(o: MockerFieldOption): o is PopulateWithFactory<T> {
+export function isPopulateWithFactory<K, T extends HydratedDocument<K> = HydratedDocument<K>>(o: MockerFieldOption): o is PopulateWithFactory<K> {
   return (o as PopulateWithFactory<T>).populateWithFactory !== undefined
 }
 
-export function isPopulateWithSchema<T extends Document>(o: MockerFieldOption): o is PopulateWithSchema<T> {
+export function isPopulateWithSchema<K, T extends HydratedDocument<K> = HydratedDocument<K>>(o: MockerFieldOption): o is PopulateWithSchema<K> {
   return (o as PopulateWithSchema<T>).populateWithSchema !== undefined
 }
 
