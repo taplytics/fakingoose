@@ -1,18 +1,18 @@
 import {
-  Model,
-  Schema,
-  Document
+    Model,
+    Schema,
+    HydratedDocument
 } from 'mongoose';
 
 import { generate } from './generate';
 import { FactoryOptions, GlobalOptions, GlobalObjectIdOptions, GlobalDecimal128Options } from './types'
 
-export class Mocker<T extends Document> {
-  schema: Schema<T>
+export class Mocker<K, T extends HydratedDocument<K>> {
+  schema: Schema<K>
   globalOptions: GlobalOptions;
   options: FactoryOptions;
 
-  constructor(model: Schema<T> | Model<T>, options: FactoryOptions = {}) {
+  constructor(model: Schema<K> | Model<K>, options: FactoryOptions = {}) {
     this.schema = isModel(model) ? model.schema : model;
     this.options = options;
     this.globalOptions = {};
@@ -29,7 +29,7 @@ export class Mocker<T extends Document> {
   }
 
   generate(staticFields: Record<string,unknown> = {}, overrideOptions: FactoryOptions = undefined) {
-    return generate<T>(this.schema, {
+    return generate<K, T>(this.schema, {
       options: overrideOptions || this.options,
       staticFields,
       globalOptions: this.globalOptions,
@@ -37,10 +37,10 @@ export class Mocker<T extends Document> {
   }
 }
 
-export function factory<T extends Document>(modelOrSchema: Schema<T> | Model<T>, options: FactoryOptions = {}): Mocker<T> {
-  return new Mocker<T>(modelOrSchema, options);
+export function factory<K, T extends HydratedDocument<K> = HydratedDocument<K>>(modelOrSchema: Schema<K> | Model<K>, options: FactoryOptions = {}): Mocker<K, T> {
+  return new Mocker<K, T>(modelOrSchema, options);
 }
 
-function isModel<T extends Document>(m: Model<T> | Schema<T>): m is Model<T> {
-  return (m as Model<T>).schema !== undefined;
+function isModel<K, T extends HydratedDocument<K>>(m: Model<K> | Schema<K>): m is Model<K> {
+  return (m as Model<K>).schema !== undefined;
 }

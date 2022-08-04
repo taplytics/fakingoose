@@ -1,4 +1,4 @@
-import { Model, Schema, Document } from "mongoose";
+import { Model, Schema, Document, HydratedDocument } from "mongoose";
 import { Mocker } from "./mocker";
 
 type ValueCallback = (mockObject: Document) => any;
@@ -38,8 +38,8 @@ export interface SizeFieldOptions {
 
 export type ObjectIdFieldOptions<T extends Document> = PopulateWithFactory<T> | PopulateWithSchema<T>
 
-export interface PopulateWithFactory<T extends Document> {
-  populateWithFactory: Mocker<T>
+export interface PopulateWithFactory<K, T extends HydratedDocument<K> = HydratedDocument<K>> {
+  populateWithFactory: Mocker<K, T>
 }
 
 export interface PopulateWithSchema<T extends Document> {

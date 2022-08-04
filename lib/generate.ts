@@ -3,8 +3,8 @@ import * as set from 'lodash.set';
 import  * as get from 'lodash.get';
 import * as flatten from 'flat';
 import {
-  Schema,
-  Document
+    Schema,
+    Document, HydratedDocument
 } from 'mongoose';
 import  ObjectId from 'bson-objectid';
 import { factory } from './mocker';
@@ -239,13 +239,13 @@ const setIndirectValues = (parentPath, rootValue, indirectVals) => {
   return indirectVals;
 };
 
-type GenerateOptions<T extends Document> = {
+type GenerateOptions = {
   options: FactoryOptions,
   staticFields: Record<string, unknown>,
   globalOptions: GlobalOptions
 }
 
-export function generate<T extends Document>(schema: Schema<T>, opts: GenerateOptions<T>): T {
+export function generate<K, T extends HydratedDocument<K>>(schema: Schema<K>, opts: GenerateOptions): T {
   const { options, staticFields, globalOptions } = opts;
   const mockObject = {};
   const fieldGeneration = [];
